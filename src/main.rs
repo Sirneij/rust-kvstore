@@ -2,14 +2,18 @@ use std::io::prelude::*;
 use std::{collections::HashMap, path::PathBuf};
 
 fn main() {
-    let mut args = std::env::args().skip(1);
-    let key = args.next().expect("Key was not found");
-    let value = args.next().expect("Value could not be found.");
+    let args: Vec<String> = std::env::args().collect();
+    // let args: Vec<String> = env::args().collect();
+    // println!("{:?}", args);
+    let key = &args[1];
+    let value = &args[2];
+    // let key = args.next().expect("Key was not found");
+    // let value = args.next().expect("Value could not be found.");
     let mut database = Database::new().expect("Corrupt database");
-    database.insert(key, value);
+    database.insert(key.to_string(), value.to_string());
 }
 
-/// This serves as thestruct or structure
+/// This serves as the struct or structure
 /// for the database
 struct Database {
     /// Only map field is involved which is
