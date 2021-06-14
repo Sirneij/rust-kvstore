@@ -13,23 +13,36 @@ fn main() {
 /// for the database
 struct Database {
     /// Only map field is involved which is
-    /// of type HashMap
+    /// of type HashMap since we want a key-value pair
     map: HashMap<String, String>,
 }
 
 /// Implementation of the Database struct
 impl Database {
-    /// new function ("constructor" in other languages)
-    /// It returns Result<T, Error> where T is the Database
+    /// Returns a `Result<Database, std::io::Error>` which means a database
+    /// or a standard error is returned. An alias to this return type is
+    /// `std::io::Result<()>`
+    ///
+    ///
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let database = Database::new().expect("Corrupt database");
+    /// ```
     fn new() -> Result<Database, std::io::Error> {
-        // read the content of the file
-        // let contents = match std::fs::read_to_string("kv.db") {
-        //     Ok(c) => c,
-        //     Err(error) => {
-        //         return Err(error);
-        //     }
-        // };
         let mut map: HashMap<String, String> = HashMap::new();
+        // read the content of the file
+        // Some other way to have done this is
+        // ```
+        // let contents = match std::fs::read_to_string("kv.db") {
+        //    Ok(c) => c,
+        //     Err(error) => {
+        //        return Err(error);
+        //    }
+        //};
+        // ```
+
         let mut contents = String::new();
         let path = PathBuf::from("kv.db");
         if path.exists() {
@@ -68,6 +81,6 @@ fn do_flush(database: &Database) -> std::io::Result<()> {
         contents.push_str(value);
         contents.push('\n');
     }
-
-    Ok(std::fs::write("kv.db", contents).expect("Unable to create kv.db"))
+    std::fs::write("kv.db", contents).expect("Unable to create kv.db");
+    Ok(())
 }
